@@ -19,7 +19,7 @@ namespace TimGumchewer
         Dictionary<String, Rectangle> spriteRects = 
             new Dictionary<string, Rectangle>();
 
-        Dictionary<PlayerIndex, Player> players =
+        public Dictionary<PlayerIndex, Player> players =
             new Dictionary<PlayerIndex, Player>();
 
         public GameScreen(ContentManager content)
@@ -72,6 +72,8 @@ namespace TimGumchewer
             spriteRects.Add("heart3", new Rectangle(384, 640, 128, 128));
         }
 
+        DateTime gameStart = DateTime.Now;
+
         public void ResetGame()
         {
             Random rand = new Random();
@@ -81,6 +83,8 @@ namespace TimGumchewer
             {
                 player.Reset(seed);
             }
+
+            gameStart = DateTime.Now;
         }
 
         public bool BothPlayersAreDead()
@@ -98,7 +102,9 @@ namespace TimGumchewer
             if (BothPlayersAreDead())
             {
                 Game1.CurrentScreen = Game1.EndScreen;
-                ResetGame();
+                GamePad.SetVibration(PlayerIndex.One, 0.0f, 0.0f);
+                GamePad.SetVibration(PlayerIndex.Two, 0.0f, 0.0f);
+                //ResetGame();
                 return;
             }
 
@@ -107,13 +113,26 @@ namespace TimGumchewer
                 var player = players[playerIndex];
                 var gamepad = GamePad.GetState(playerIndex);
 
+                if (player.rumbleCounter > 0)
+                {
+                    GamePad.SetVibration(playerIndex, 1.0f, 1.0f);
+                    player.rumbleCounter--;
+                }
+                else
+                {
+                    GamePad.SetVibration(playerIndex, 0.0f, 0.0f);
+                }
+
                 if (player.Health == 0)
                 {
                     player.PlayerStatus = PlayerStatus.DEAD;
                     continue;
                 }
 
-                player.Speed = gamepad.ThumbSticks.Left.X * 3.0f;
+                var seconds = DateTime.Now.Subtract(gameStart).TotalSeconds;
+                var speed = (float)Math.Min(3.0f + seconds / 60.0f, 15.0f);
+
+                player.Speed = gamepad.ThumbSticks.Left.X * speed;
                 var status = PlayerStatus.STANDING;
 
                 if (player.Speed < 0.0f)
@@ -175,11 +194,13 @@ namespace TimGumchewer
                 {
                     player.Health--;
                     player.Move(96);
+                    player.rumbleCounter = 15;
                 }
                 else if (tactic == Tactic.SLIDE && status != PlayerStatus.SLIDING)
                 {
                     player.Health--;
                     player.Move(96);
+                    player.rumbleCounter = 25;
                 }
             }
         }

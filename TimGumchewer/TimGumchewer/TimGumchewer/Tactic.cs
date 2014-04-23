@@ -6,7 +6,7 @@ using System.Text;
 namespace TimGumchewer
 {
     [Flags]
-    enum Tactic
+    public enum Tactic
     {
         RUN   = 1,
         SLIDE = 2,

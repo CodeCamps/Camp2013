@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace TimGumchewer
 {
-    class Player
+    public class Player
     {
         public float Location;
         public float Speed;
@@ -16,6 +16,8 @@ namespace TimGumchewer
         public float SpeedBonus; // can be negative
         public int CandiesCollected;
         public float startX;
+
+        public int rumbleCounter = 0;
 
         public int runFrame = 0;
         public float elapsedFrameTime = 0.0f;
@@ -31,7 +33,7 @@ namespace TimGumchewer
         public string[] jumpFrames = 
         { 
             "roll1", "roll1",
-            "fly", "fly", "fly", "fly", "fly", "fly", "fly", 
+            "fly", "fly", "fly", "fly", "fly", 
             "roll2", "roll3", "roll4", "roll5", "roll6",
             "END"
         };
@@ -116,7 +118,7 @@ namespace TimGumchewer
             }
             else
             {
-                int numTiles = rand.Next(6) + 2;
+                int numTiles = rand.Next(3) + 2;
                 for (int i = 0; i < numTiles; i++)
                 {
                     var tile = new Tile();

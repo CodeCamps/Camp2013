@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TimGumchewer
 {
-    enum TileType
+    public enum TileType
     {
         NORMAL,
         GUM,

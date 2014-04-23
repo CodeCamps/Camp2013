@@ -37,8 +37,23 @@ namespace TimGumchewer
 
             batch.Draw(Game1.texCave, Game1.rectScreen, null, Color.White);
 
+            Texture2D texPlayer1 = texTimWin;
+            Texture2D texPlayer2 = texTimLose;
+
+            var players = Game1.GameScreen.players;
+            if (players[PlayerIndex.Two].Location > players[PlayerIndex.One].Location)
+            {
+                texPlayer1 = texTimLose;
+                texPlayer2 = texTimWin;
+            }
+            else if (players[PlayerIndex.Two].Location == players[PlayerIndex.One].Location)
+            {
+                texPlayer1 = texTimLose;
+                texPlayer2 = texTimLose;
+            }
+
             Vector2 loc = new Vector2(10, Game1.rectScreen.Height - texTimWin.Height - 10);
-            batch.Draw(texTimWin, loc, Color.White);
+            batch.Draw(texPlayer1, loc, Color.White);
 
             loc.Y -= 55;
             loc.X += 40;
@@ -47,7 +62,7 @@ namespace TimGumchewer
             loc = new Vector2(
                 Game1.rectScreen.Width - texTimWin.Width - 10, 
                 Game1.rectScreen.Height - texTimWin.Height - 10);
-            batch.Draw(texTimLose, loc, Color.White);
+            batch.Draw(texPlayer2, loc, Color.White);
 
             loc.Y -= 55;
             loc.X += 40;

@@ -23,6 +23,8 @@ namespace TimGumchewer
         public static Screen CurrentScreen;
         public static Rectangle rectScreen;
 
+        public Song themeSong;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -63,7 +65,11 @@ namespace TimGumchewer
             EndScreen = new EndScreen(Content);
             GameScreen = new GameScreen(Content);
 
-            CurrentScreen = EndScreen; // TitleScreen;
+            CurrentScreen = TitleScreen;
+
+            themeSong = Content.Load<Song>("EyeOfTheTiger");
+            MediaPlayer.Play(themeSong);
+            MediaPlayer.IsRepeating = true;
         }
 
         public static TitleScreen TitleScreen;

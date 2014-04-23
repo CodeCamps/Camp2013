@@ -22,6 +22,7 @@ namespace TimGumchewer
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
             {
+                Game1.GameScreen.ResetGame();
                 Game1.CurrentScreen = Game1.GameScreen;
             }
         }

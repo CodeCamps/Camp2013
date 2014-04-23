@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TimGumchewer
 {
-    enum PlayerStatus
+    public enum PlayerStatus
     {
         STANDING,
         JUMPING,
