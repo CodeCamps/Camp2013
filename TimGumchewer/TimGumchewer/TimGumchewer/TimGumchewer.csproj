@@ -116,7 +116,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Screen.cs" />
-    <Compile Include="Tactic.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileType.cs" />
     <Compile Include="TitleScreen.cs" />

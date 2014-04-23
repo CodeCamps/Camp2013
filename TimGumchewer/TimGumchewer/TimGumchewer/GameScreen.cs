@@ -104,7 +104,6 @@ namespace TimGumchewer
                 Game1.CurrentScreen = Game1.EndScreen;
                 GamePad.SetVibration(PlayerIndex.One, 0.0f, 0.0f);
                 GamePad.SetVibration(PlayerIndex.Two, 0.0f, 0.0f);
-                //ResetGame();
                 return;
             }
 
@@ -123,6 +122,21 @@ namespace TimGumchewer
                     GamePad.SetVibration(playerIndex, 0.0f, 0.0f);
                 }
 
+                // if you only have one controller, allow player one to kill player two
+                if (playerIndex == PlayerIndex.One && player.Health == 0)
+                {
+                    // press X to kill player two
+                    if (gamepad.Buttons.X == ButtonState.Pressed)
+                    {
+                        // only valid if player two hasn't moved (no cheating!)
+                        if (players[PlayerIndex.Two].Location == 0.0f)
+                        {
+                            // he's sooooooo dead now
+                            players[PlayerIndex.Two].Health = 0;
+                        }
+                    }
+                }
+
                 if (player.Health == 0)
                 {
                     player.PlayerStatus = PlayerStatus.DEAD;
@@ -130,9 +144,17 @@ namespace TimGumchewer
                 }
 
                 var seconds = DateTime.Now.Subtract(gameStart).TotalSeconds;
-                var speed = (float)Math.Min(3.0f + seconds / 60.0f, 15.0f);
+                var speed = (float)Math.Min(3.0f + seconds / 60.0f, 10.0f);
 
-                player.Speed = gamepad.ThumbSticks.Left.X * speed;
+                if (gamepad.DPad.Right == ButtonState.Pressed)
+                {
+                    player.Speed = speed;
+                }
+                else
+                {
+                    player.Speed = gamepad.ThumbSticks.Left.X * speed;
+                }
+
                 var status = PlayerStatus.STANDING;
 
                 if (player.Speed < 0.0f)
@@ -141,16 +163,33 @@ namespace TimGumchewer
                 }
 
                 bool isJumping = player.PlayerStatus == PlayerStatus.JUMPING;
+                bool isSliding = player.PlayerStatus == PlayerStatus.SLIDING;
 
-                bool isSliding =
+                bool doSlide =
                     (gamepad.Buttons.B == ButtonState.Pressed) ||
                     (gamepad.Triggers.Right > 0.0f);
+                
+                bool doJump =
+                    (gamepad.Buttons.A == ButtonState.Pressed) ||
+                    (gamepad.Buttons.RightShoulder == ButtonState.Pressed);
 
-                if (isSliding && !isJumping)
+                if ((!player.wasSlideButtonPressed && doSlide && !isJumping) || isSliding)
                 {
+                    player.wasSlideButtonPressed = true;
+                    isSliding = true;
                     status = PlayerStatus.SLIDING;
+                    player.elapsedFrameTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                    if (player.elapsedFrameTime > 100.0f)
+                    {
+                        player.slideFrame++;
+                        player.elapsedFrameTime = 0.0f;
+                        if (player.slideFrame == player.slideFrames.Length - 1)
+                        {
+                            status = PlayerStatus.RUNNING;
+                        }
+                    }
                 }
-                else if((!player.wasJumpButtonPressed && gamepad.Buttons.A == ButtonState.Pressed) || isJumping)
+                else if((!player.wasJumpButtonPressed && doJump && !isSliding) || isJumping)
                 {
                     player.wasJumpButtonPressed = true;
                     isJumping = true;
@@ -172,11 +211,13 @@ namespace TimGumchewer
                     status = PlayerStatus.STANDING;
                     player.runFrame = 0;
                     player.jumpFrame = 0;
+                    player.slideFrame = 0;
                 }
                 else
                 {
                     status = PlayerStatus.RUNNING;
                     player.jumpFrame = 0;
+                    player.slideFrame = 0;
                     player.elapsedFrameTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                     if (player.elapsedFrameTime > 100.0f)
                     {
@@ -188,19 +229,13 @@ namespace TimGumchewer
                 player.PlayerStatus = status;
                 player.Move(player.Speed);
                 player.wasJumpButtonPressed = gamepad.Buttons.A == ButtonState.Pressed || isJumping;
+                player.wasSlideButtonPressed = doSlide || isSliding;
 
-                var tactic = player.tiles[2].Tactic;
-                if (tactic == Tactic.JUMP_OR_DIVE && status != PlayerStatus.JUMPING)
+                if((player.tiles[2].Tactic & player.PlayerStatus) == PlayerStatus.NONE)
                 {
                     player.Health--;
                     player.Move(96);
                     player.rumbleCounter = 15;
-                }
-                else if (tactic == Tactic.SLIDE && status != PlayerStatus.SLIDING)
-                {
-                    player.Health--;
-                    player.Move(96);
-                    player.rumbleCounter = 25;
                 }
             }
         }
@@ -245,7 +280,7 @@ namespace TimGumchewer
                     {
                         rectTile = spriteRects["gum"];
                     }
-                    else if (tile.TileType == TileType.SAW_TOP)
+                    else if (tile.TileType == TileType.SAWS)
                     {
                         rectTile = spriteRects["saws"];
                     }
@@ -293,7 +328,7 @@ namespace TimGumchewer
                         break;
                 }
 
-                batch.Draw(texSprites, loc, rectTim, Color.White);
+                batch.Draw(texSprites, loc, rectTim, player.Health == 0 ? Color.Blue : Color.White);
                 batch.Draw(texSprites, loc, spriteRects["heart" + player.Health], Color.White);
                 loc.X = 5.0f;
                 loc.Y = loc.Y + 128.0f - fontScore.LineSpacing - 2.0f;

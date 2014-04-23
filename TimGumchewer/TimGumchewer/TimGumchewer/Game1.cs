@@ -23,12 +23,17 @@ namespace TimGumchewer
         public static Screen CurrentScreen;
         public static Rectangle rectScreen;
 
-        public Song themeSong;
+        //public Song themeSong;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferMultiSampling = false;
+            graphics.IsFullScreen = true;
         }
 
         /// <summary>
@@ -67,9 +72,9 @@ namespace TimGumchewer
 
             CurrentScreen = TitleScreen;
 
-            themeSong = Content.Load<Song>("EyeOfTheTiger");
-            MediaPlayer.Play(themeSong);
-            MediaPlayer.IsRepeating = true;
+            //themeSong = Content.Load<Song>("EyeOfTheTiger");
+            //MediaPlayer.Play(themeSong);
+            //MediaPlayer.IsRepeating = true;
         }
 
         public static TitleScreen TitleScreen;

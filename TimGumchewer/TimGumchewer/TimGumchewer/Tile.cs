@@ -8,6 +8,6 @@ namespace TimGumchewer
     public class Tile
     {
         public TileType TileType;
-        public Tactic Tactic;
+        public PlayerStatus Tactic;
     }
 }

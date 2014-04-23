@@ -9,14 +9,8 @@ namespace TimGumchewer
     {
         NORMAL,
         GUM,
-        SAW_TOP,
-        SAW_BOTTOM,
-        SAW_BOTH,
+        SAWS,
         SPIKE,
         FIRE,
-        FIREBALL,
-        TOP_BLOCK,
-        FALL_AWAY,
-        SPRINGBOARD,
     }
 }

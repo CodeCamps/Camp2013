@@ -37,9 +37,24 @@ namespace TimGumchewer
             "roll2", "roll3", "roll4", "roll5", "roll6",
             "END"
         };
+
         public string getCurrentJumpFrame()
         {
             return jumpFrames[jumpFrame % jumpFrames.Length];
+        }
+
+        public bool wasSlideButtonPressed = false;
+        public int slideFrame = 0;
+        public string[] slideFrames = 
+        { 
+            "slide", "slide", "slide", "slide", "slide", 
+            "slide", "slide", "slide", "slide", "slide",
+            "END"
+        };
+
+        public string getCurrentSlideFrame()
+        {
+            return slideFrames[slideFrame % slideFrames.Length];
         }
 
         public void Reset(int randomSeed)
@@ -55,6 +70,11 @@ namespace TimGumchewer
             this.tiles.Clear();
             this.FillTiles();
             this.wasJumpButtonPressed = true;
+            //this.wasSlideButtonPressed = true;
+            this.isObstacle = false;
+            this.jumpFrame = 0;
+            this.slideFrame = 0;
+            this.runFrame = 0;
         }
 
         public void Move(float distance)
@@ -88,7 +108,7 @@ namespace TimGumchewer
 
         public void AddTiles()
         {
-            if (isObstacle)
+            if (isObstacle && tiles.Count > 5)
             {
                 int value = rand.Next(4);
                 var tile = new Tile();
@@ -96,22 +116,22 @@ namespace TimGumchewer
                 if (value == 0)
                 {
                     tile.TileType = TileType.GUM;
-                    tile.Tactic = Tactic.JUMP_OR_DIVE;
+                    tile.Tactic = PlayerStatus.JUMPING;
                 }
                 else if (value == 1)
                 {
-                    tile.TileType = TileType.SAW_TOP;
-                    tile.Tactic = Tactic.SLIDE;
+                    tile.TileType = TileType.SAWS;
+                    tile.Tactic = PlayerStatus.SLIDING;
                 }
                 else if (value == 2)
                 {
                     tile.TileType = TileType.SPIKE;
-                    tile.Tactic = Tactic.JUMP_OR_DIVE;
+                    tile.Tactic = PlayerStatus.JUMPING;
                 }
                 else if (value == 3)
                 {
                     tile.TileType = TileType.FIRE;
-                    tile.Tactic = Tactic.JUMP_OR_DIVE;
+                    tile.Tactic = PlayerStatus.JUMPING;
                 }
 
                 tiles.Add(tile);
@@ -123,7 +143,7 @@ namespace TimGumchewer
                 {
                     var tile = new Tile();
                     tile.TileType = TileType.NORMAL;
-                    tile.Tactic = Tactic.ANY;
+                    tile.Tactic = PlayerStatus.ANY;
                     tiles.Add(tile);
                 }
             }
