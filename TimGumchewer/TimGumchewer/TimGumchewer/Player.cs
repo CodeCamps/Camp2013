@@ -52,6 +52,7 @@ namespace TimGumchewer
             this.rand = new Random(randomSeed);
             this.tiles.Clear();
             this.FillTiles();
+            this.wasJumpButtonPressed = true;
         }
 
         public void Move(float distance)

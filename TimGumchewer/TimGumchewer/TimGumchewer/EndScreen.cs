@@ -12,8 +12,15 @@ namespace TimGumchewer
 {
     public class EndScreen : Screen
     {
+        Texture2D texTimWin;
+        Texture2D texTimLose;
+        SpriteFont fontEndScreen;
+
         public EndScreen(ContentManager content)
         {
+            texTimWin = content.Load<Texture2D>("TimFaceWin");
+            texTimLose = content.Load<Texture2D>("TimFaceLose");
+            fontEndScreen = content.Load<SpriteFont>("EndScreenFont");
         }
 
         public override void Update(GameTime gameTime)
@@ -28,7 +35,30 @@ namespace TimGumchewer
         {
             batch.Begin();
 
-            batch.Draw(Game1.texCave, Game1.rectScreen, null, Color.White); 
+            batch.Draw(Game1.texCave, Game1.rectScreen, null, Color.White);
+
+            Vector2 loc = new Vector2(10, Game1.rectScreen.Height - texTimWin.Height - 10);
+            batch.Draw(texTimWin, loc, Color.White);
+
+            loc.Y -= 55;
+            loc.X += 40;
+            batch.DrawString(fontEndScreen, "Player One", loc, Color.White);
+
+            loc = new Vector2(
+                Game1.rectScreen.Width - texTimWin.Width - 10, 
+                Game1.rectScreen.Height - texTimWin.Height - 10);
+            batch.Draw(texTimLose, loc, Color.White);
+
+            loc.Y -= 55;
+            loc.X += 40;
+            batch.DrawString(fontEndScreen, "Player Two", loc, Color.White);
+
+            if (Math.Sin(gameTime.TotalGameTime.TotalSeconds * 9.0) < 0.0)
+            {
+                loc.X = 250;
+                loc.Y -= 70;
+                batch.DrawString(fontEndScreen, "Press Start", loc, Color.White);
+            }
 
             batch.End();
         }

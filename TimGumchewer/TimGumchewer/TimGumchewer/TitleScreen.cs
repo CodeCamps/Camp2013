@@ -11,8 +11,11 @@ namespace TimGumchewer
 {
     public class TitleScreen : Screen
     {
+        Texture2D texPressA; 
+
         public TitleScreen(ContentManager content)
         {
+            texPressA = content.Load<Texture2D>("caveTitlePressA");
         }
 
         public override void Update(GameTime gameTime)
@@ -27,7 +30,12 @@ namespace TimGumchewer
         {
             batch.Begin();
 
-            batch.Draw(Game1.texCave, Game1.rectScreen, null, Color.White); 
+            batch.Draw(Game1.texCave, Game1.rectScreen, null, Color.White);
+
+            if (Math.Sin(gameTime.TotalGameTime.TotalSeconds * 9.0) < 0.0)
+            {
+                batch.Draw(texPressA, Game1.rectScreen, null, Color.White);
+            }
 
             batch.End();
         }

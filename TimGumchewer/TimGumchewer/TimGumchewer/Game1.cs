@@ -63,7 +63,7 @@ namespace TimGumchewer
             EndScreen = new EndScreen(Content);
             GameScreen = new GameScreen(Content);
 
-            CurrentScreen = TitleScreen;
+            CurrentScreen = EndScreen; // TitleScreen;
         }
 
         public static TitleScreen TitleScreen;
