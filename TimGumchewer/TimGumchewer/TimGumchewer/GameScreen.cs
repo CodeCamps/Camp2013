@@ -13,6 +13,7 @@ namespace TimGumchewer
     {
         Texture2D texSprites;
         Texture2D texBackground;
+        SpriteFont fontScore;
         ContentManager Content;
 
         Dictionary<String, Rectangle> spriteRects = 
@@ -26,6 +27,7 @@ namespace TimGumchewer
             this.Content = content;
             this.texBackground = content.Load<Texture2D>("cave");
             this.texSprites = content.Load<Texture2D>("Sprites");
+            this.fontScore = content.Load<SpriteFont>("ScoreFont");
 
             InitSpriteRectangles();
 
@@ -70,16 +72,45 @@ namespace TimGumchewer
             spriteRects.Add("heart3", new Rectangle(384, 640, 128, 128));
         }
 
+        public void ResetGame()
+        {
+            Random rand = new Random();
+            int seed = rand.Next();
+
+            foreach (var player in players.Values)
+            {
+                player.Reset(seed);
+            }
+        }
+
+        public bool BothPlayersAreDead()
+        {
+            var result = true;
+            foreach (var player in players.Values)
+            {
+                result = result && player.PlayerStatus == PlayerStatus.DEAD;
+            }
+            return result;
+        }
+
         public override void Update(GameTime gameTime)
         {
-            //Console.Write(players[PlayerIndex.One].Location);
-            //Console.Write(" / ");
-            //Console.WriteLine(players[PlayerIndex.Two].Location);
+            if (BothPlayersAreDead())
+            {
+                ResetGame();
+                return;
+            }
 
             foreach (var playerIndex in players.Keys)
             {
                 var player = players[playerIndex];
                 var gamepad = GamePad.GetState(playerIndex);
+
+                if (player.Health == 0)
+                {
+                    player.PlayerStatus = PlayerStatus.DEAD;
+                    continue;
+                }
 
                 player.Speed = gamepad.ThumbSticks.Left.X * 3.0f;
                 var status = PlayerStatus.STANDING;
@@ -217,6 +248,7 @@ namespace TimGumchewer
                     case PlayerStatus.STANDING:
                         rectTim = spriteRects["stand"];
                         break;
+                    case PlayerStatus.DEAD:
                     case PlayerStatus.SLIDING:
                         rectTim = spriteRects["slide"];
                         break;
@@ -241,6 +273,10 @@ namespace TimGumchewer
 
                 batch.Draw(texSprites, loc, rectTim, Color.White);
                 batch.Draw(texSprites, loc, spriteRects["heart" + player.Health], Color.White);
+                loc.X = 5.0f;
+                loc.Y = loc.Y + 128.0f - fontScore.LineSpacing - 2.0f;
+                batch.DrawString(fontScore, player.Location.ToString("00000.0"), loc, Color.Black);
+
             }
 
             batch.End();
