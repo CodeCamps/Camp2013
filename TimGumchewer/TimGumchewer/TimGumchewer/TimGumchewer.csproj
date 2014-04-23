@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EndScreen.cs" />
     <Compile Include="GameScreen.cs" />
     <Compile Include="GameStatus.cs" />
     <Compile Include="Player.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Tactic.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileType.cs" />
+    <Compile Include="TitleScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

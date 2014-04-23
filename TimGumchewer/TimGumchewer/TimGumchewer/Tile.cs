@@ -7,7 +7,6 @@ namespace TimGumchewer
 {
     class Tile
     {
-        public int Location;
         public TileType TileType;
         public Tactic Tactic;
     }

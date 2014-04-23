@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TimGumchewer
 {
-    class GameScreen : Screen
+    public class GameScreen : Screen
     {
         Texture2D texSprites;
         Texture2D texBackground;
@@ -97,6 +97,7 @@ namespace TimGumchewer
         {
             if (BothPlayersAreDead())
             {
+                Game1.CurrentScreen = Game1.EndScreen;
                 ResetGame();
                 return;
             }

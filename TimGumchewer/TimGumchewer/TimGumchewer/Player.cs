@@ -8,8 +8,6 @@ namespace TimGumchewer
 {
     class Player
     {
-        public bool red;
-
         public float Location;
         public float Speed;
         public PlayerIndex PlayerIndex;
@@ -33,7 +31,7 @@ namespace TimGumchewer
         public string[] jumpFrames = 
         { 
             "roll1", "roll1",
-            "fly", "fly", "fly", "fly", "fly", "fly", "fly", "fly", 
+            "fly", "fly", "fly", "fly", "fly", "fly", "fly", 
             "roll2", "roll3", "roll4", "roll5", "roll6",
             "END"
         };

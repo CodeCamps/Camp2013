@@ -19,7 +19,9 @@ namespace TimGumchewer
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Screen CurrentScreen;
+        public static Texture2D texCave;
+        public static Screen CurrentScreen;
+        public static Rectangle rectScreen;
 
         public Game1()
         {
@@ -38,6 +40,11 @@ namespace TimGumchewer
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            rectScreen = new Rectangle(
+                0, 0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height);
         }
 
         /// <summary>
@@ -48,10 +55,20 @@ namespace TimGumchewer
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            texCave = Content.Load<Texture2D>("caveTitle");
 
             // TODO: use this.Content to load your game content here
-            this.CurrentScreen = new GameScreen(Content);
+
+            TitleScreen = new TitleScreen(Content);
+            EndScreen = new EndScreen(Content);
+            GameScreen = new GameScreen(Content);
+
+            CurrentScreen = TitleScreen;
         }
+
+        public static TitleScreen TitleScreen;
+        public static EndScreen EndScreen;
+        public static GameScreen GameScreen;
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
