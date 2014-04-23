@@ -5,13 +5,11 @@ using System.Text;
 
 namespace TimGumchewer
 {
-    enum PlayerStatus
+    enum GameStatus
     {
-        STANDING,
-        JUMPING,
-        RUNNING,
-        SLIDING,
-        INJURED,
-        DEAD,
+        WAITING,
+        READY,
+        PLAYING,
+        GAME_OVER,
     }
 }
